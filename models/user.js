@@ -32,5 +32,11 @@ const userSchema = new Schema({
     }
 });
 
+// we used a normal function instead of the arrow function to make use of the "this" pointer
+userSchema.methods.toJSON = function () {
+    const {__v, password, ...user} = this.toObject();
+    return user;
+}
+
 const userModel = model("User", userSchema);
 export default userModel;
