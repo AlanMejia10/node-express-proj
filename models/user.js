@@ -34,7 +34,8 @@ const userSchema = new Schema({
 
 // we used a normal function instead of the arrow function to make use of the "this" pointer
 userSchema.methods.toJSON = function () {
-    const {__v, password, ...user} = this.toObject();
+    const {__v, password, _id, ...user} = this.toObject();
+    user.uid = _id;
     return user;
 }
 

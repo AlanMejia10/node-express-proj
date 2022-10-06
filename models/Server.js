@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors"
-import {router} from "../routes/user.route.js";
+import userRouter from "../routes/user.route.js";
+import authRouter from "../routes/auth.route.js";
 import {dbConnection} from "../database/config.js";
 
 export class Server {
@@ -8,13 +9,14 @@ export class Server {
         this.app = express();
         this.port = process.env.PORT;
         this.usersPath = "/api/users";
+        this.authPath = "/api/auth"
 
         this.databaseConnection();
         this.middlewares();
         this.routes();
     }
 
-    async databaseConnection(){
+    async databaseConnection() {
         await dbConnection();
     }
 
@@ -31,7 +33,8 @@ export class Server {
         /* this uses the path /api/users as a default route, so the routes in the user file
         * will contain that route, if the route have another route it'll be expanded as
         * /api/users/route-defined  */
-        this.app.use(this.usersPath, router);
+        this.app.use(this.usersPath, userRouter);
+        this.app.use(this.authPath, authRouter);
     }
 
     listen() {

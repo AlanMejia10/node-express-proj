@@ -3,8 +3,9 @@ import {usersDelete, usersGet, usersPost, usersPut} from "../controllers/users.c
 import {check} from "express-validator";
 import {fieldValidation} from "../middlewares/field-validator.js";
 import {emailExists, existsUserById, isValidRole} from "../helpers/db-validators.js";
+import {validateJWT} from "../middlewares/validate-jwt.js";
 
-export const router = Router();
+const router = Router();
 
 /* these routes are defined as root, but they will be expanded with the /api/users route
 * because that was set using a middleware in the routes function (Server)  */
@@ -35,7 +36,10 @@ router.put("/:id", [
 ], usersPut);
 
 router.delete("/:id", [
+    validateJWT,
     check("id", "not a valid mongo id").isMongoId(),
     check("id").custom(id => existsUserById(id)),
     fieldValidation
 ], usersDelete);
+
+export default router;
